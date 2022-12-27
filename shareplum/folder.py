@@ -87,11 +87,15 @@ class _Folder():
         post(self._session, url=url, headers=headers, data=content, timeout=self.timeout)
 
     def check_out(self, file_name):
+        #Its a modify of original method for return json
+        #with information of the file, because I need
+        #the unique id from a file
         escaped_file_name = self._escape_name(file_name)
-        url = self.site_url + f"/_api/web/GetFileByServerRelativeUrl('{self._escaped_relative_url}/{escaped_file_name}')/CheckOut()"
+        url = self.site_url + f"/_api/web/GetFileByServerRelativeUrl('{self._escaped_relative_url}/{escaped_file_name}')"
         headers = {'X-RequestDigest': self.contextinfo['FormDigestValue']}
 
-        post(self._session, url=url, headers=headers)
+        response = post(self._session, url=url, headers=headers)
+        return response.json()
 
     def check_in(self, file_name, comment):
         escaped_file_name = self._escape_name(file_name)
